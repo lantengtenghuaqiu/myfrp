@@ -1,0 +1,10 @@
+serverAddr = "8.163.35.153" 
+serverPort = 7000
+token = "@#8SQSA3&ZJJ144" 
+ 
+[[proxies]] 
+name = "mygame" 
+type = "tcp" 
+localip = "127.0.0.1" 
+localport = 25565
+remoteport = 25565
