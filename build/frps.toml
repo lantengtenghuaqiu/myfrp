@@ -1,0 +1,6 @@
+bindPort =  7000
+token = "@#8SQSA3&ZJJ144" 
+
+logFile = "./frps.log"
+logLevel = "info"
+logMaxDays = 3
