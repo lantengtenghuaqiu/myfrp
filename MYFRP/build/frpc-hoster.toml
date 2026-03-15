@@ -1,0 +1,11 @@
+serverAddr="8.134.254.69" 
+serverPort=7000
+token="SYU!182Ols" 
+ 
+[[proxies]] 
+name="MC1" 
+type="xtcp" 
+role="server" 
+sk="166XYLANDHISFRIENDS!" 
+localIP="127.0.0.1" 
+localPort=25565 

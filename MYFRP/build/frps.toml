@@ -1,7 +1,7 @@
-bindPort = 7000 
-token = "@#8SQSA3&ZJJ144" 
-UDPport = 7001 
+bindPort=7000 
+token="SYU1182Ols@#" 
+UDPport=7001 
 
-logFile = "./frps.log"
-logLevel = "info"
-logMaxDays = 3
+logFile="./frps.log"
+logLevel="info"
+logMaxDays=3

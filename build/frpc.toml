@@ -3,9 +3,9 @@ serverPort = 7000
 token = "@#8SQSA3&ZJJ144" 
  
 [[proxies]] 
-name="MC" 
+name = "MC" 
 type = "xtcp" 
 sk = "%^X2Y1LLL091&^*1" 
-role="vistor" 
+role = "vistor" 
 bindAddr = "127.0.0.1" 
 bindPort = 25535 
