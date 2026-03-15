@@ -54,111 +54,190 @@ if exist !FRPS! if exist !FRPC! (
         md %STOML%
     )
 
-
     set /p mode="Enter number : 1 Config or 2 Run-only (All other inputs count as cancel) : "
 
     echo "Your input" : [!mode!]
 
     if "!mode!"=="1" (
-        set /p choice="Enter number : 1 Server or 2 Customer (All other inputs count as cancel) : "
-        
-        echo "Your input" : [!choice!]
-        
-        if "!choice!"=="1" (
-            @REM ------------------------------------------------------------------
-            @REM Server------------------------------------------------------------
-            set /p SERVERPORT="Enter the Server PORT : "
-            echo bindPort = !SERVERPORT! > %STOML%
 
-            set /p TOKEN="Enter the TOKEN : "
-            echo token = "!TOKEN!" >> %STOML%
+        set /p ASSIGN="Choice Type : 1.Rewrite , 2.Fixed : "
+        set /p CONNECTTYPE="Choice TCP or UDP : 1.TCP , 2.UDP : "
+        set TYPE=!CONNECTTYPE!
 
-            set FRPLOG=frps.log
+        set /p CHARACTER="As Host Or Vistor : 1.Host , 2.Vistor : "
 
-            if not exist !FRPLOG! (
-                type nul > !FRPLOG!
+
+        if "!ASSIGN!"=="1" (
+
+            set /p choice="Enter number : 1 Server or 2 Customer (All other inputs count as cancel) : "
+            
+            echo "Your input" : [!choice!]
+            
+            if "!choice!"=="1" (
+                @REM ------------------------------------------------------------------
+                @REM Server------------------------------------------------------------
+                set /p SERVERPORT="Enter the Server PORT : "
+                echo bindPort = !SERVERPORT! > %STOML%
+
+                set /p TOKEN="Enter the TOKEN : "
+                echo token = "!TOKEN!" >> %STOML%
+
+                if "!TYPE!"=="2" (
+                    set /p UDPPORT="Enter the UDPPORT : "
+                    echo UDPport = !UDPPORT! >> %STOML%
+                )
+
+                set FRPLOG=frps.log
+
+                if not exist !FRPLOG! (
+                    type nul > !FRPLOG!
+                )
+
+                (
+                echo.
+                echo logFile = "./!FRPLOG!"
+                echo logLevel = "info"
+                echo logMaxDays = 3
+                ) >> %STOML%
+                echo "Runing the Service...."
+
+                @REM start /k %WORK_PATH%/build/frps.exe -c frps.toml
+
+                @REM ------------------------------------------------------------------
+                @REM ------------------------------------------------------------------
+
+            ) else if "!choice!"=="2" (
+
+                set /p SERVERAddR="Enter the Server IP : "
+                echo serverAddr = "!SERVERAddR!" > %CTOML%
+
+                set /p SERVERPORT="Enter the Server PORT : "
+                echo serverPort = !SERVERPORT! >> %CTOML%
+
+                set /p PASSWORD="Enter the Server PASSWORD : "
+                echo token = "!PASSWORD!" >> %CTOML%
+
+                (
+                echo. 
+                echo [[proxies]] 
+                )>> %CTOML%
+
+                set /p GAMENAME="Enter the Game name : "
+                echo name = "!GAMENAME!" >> %CTOML%
+
+                if "!TYPE!"=="1" (
+                    echo type = "tcp" >> %CTOML%
+                ) else (
+                    echo type = "xtcp" >> %CTOML%
+                    set /p SK="Write The SK Password : "
+                    echo sk = "!SK!" >> %CTOML%
+                )
+
+                if "!CHARACTER!"=="1" (
+                    set /p LOCALIP="Enter the Local ip : "
+                    echo localip = "!LOCALIP!" >> %CTOML%
+
+                    set /p LOCALPORT="Enter the Local port : "
+                    echo localport = !LOCALPORT! >> %CTOML%
+
+                    if "!TYPE!"=="1" (
+                        set /p REMOTEPORT="Enter the Server port : "
+                        echo remoteport = !REMOTEPORT! >> %CTOML%
+                    )
+                ) else (
+                    echo role="vistor" >> %CTOML%
+
+                    set /p BINDADDR="Enter the Bind ip : "
+                    echo bindAddr = "!BINDADDR!" >> %CTOML%
+
+                    set /p BINDPORT="Enter the Bind port : "
+                    echo bindPort = !BINDPORT! >> %CTOML%
+                )
+
+                echo "Running the Customer...."
+                @REM start cmd /k %WORK_PATH%/build/frpc.exe -c frpc.toml
+
+            ) else (
+                echo "Wrong enter.... Cancel And Quit...."
             )
 
-            (
-            echo.
-            echo logFile = "./!FRPLOG!"
-            echo logLevel = "info"
-            echo logMaxDays = 3
-            ) >> %STOML%
-            echo "Runing the Service...."
-            @REM ------------------------------------------------------------------
-            @REM ------------------------------------------------------------------
-
-
-            @REM ------------------------------------------------------------------
-            @REM Customer----------------------------------------------------------
-            set /p SERVERAddR="Enter the Server IP : "
-            echo serverAddr = "!SERVERAddR!" > %CTOML%
-
-            set /p SERVERPORT="Enter the Server PORT : "
-            echo serverPort = !SERVERPORT! >> %CTOML%
-
-            set /p PASSWORD="Enter the Server PASSWORD : "
-            echo token = "!PASSWORD!" >> %CTOML%
-
-            (
-            echo. 
-            echo [[proxies]] 
-            )>> %CTOML%
-
-            set /p GAMENAME="Enter the Game name : "
-            echo name = "!GAMENAME!" >> %CTOML%
-
-            echo type = "tcp" >> %CTOML%
-
-            set /p LOCALIP="Enter the Local ip : "
-            echo localip = "!LOCALIP!" >> %CTOML%
-
-            set /p LOCALPORT="Enter the Local port : "
-            echo localport = !LOCALPORT! >> %CTOML%
-
-            set /p REMOTEPORT="Enter the Server port : "
-            echo remoteport = !REMOTEPORT! >> %CTOML%
-
-            echo "Running the Customer...."
-            @REM ------------------------------------------------------------------
-            @REM ------------------------------------------------------------------
-
-        ) else if "!choice!"=="2" (
-            set /p SERVERAddR="Enter the Server IP : "
-            echo serverAddr = "!SERVERAddR!" > %CTOML%
-
-            set /p SERVERPORT="Enter the Server PORT : "
-            echo serverPort = !SERVERPORT! >> %CTOML%
-
-            set /p PASSWORD="Enter the Server PASSWORD : "
-            echo token = "!PASSWORD!" >> %CTOML%
-
-            (
-            echo. 
-            echo [[ 
-            echo proxies 
-            echo ]] 
-            )>> %CTOML%
-
-            set /p GAMENAME="Enter the Game name : "
-            echo name = "!GAMENAME!" >> %CTOML%
-
-            echo type = tcp >> %CTOML%
-
-            set /p LOCALIP="Enter the Local ip : "
-            echo localip = "!LOCALIP!" >> %CTOML%
-
-            set /p LOCALPORT="Enter the Local port : "
-            echo localport = !LOCALPORT! >> %CTOML%
-
-            set /p REMOTEPORT="Enter the Server port : "
-            echo remoteport = !REMOTEPORT! >> %CTOML%
-
-            echo "Running the Customer...."
         ) else (
-            echo "Wrong enter.... Cancel And Quit...."
+            if "!choice!"=="1" (
+                @REM ------------------------------------------------------------------
+                @REM Server------------------------------------------------------------
+                echo bindPort = 7000 > %STOML%
+
+                set /p TOKEN="Enter the TOKEN : "
+                echo token = "!TOKEN!" >> %STOML%
+
+                if "!TYPE!"=="2" (
+                    echo UDPport = 7001 >> %STOML%
+                )
+
+                set FRPLOG=frps.log
+
+                if not exist !FRPLOG! (
+                    type nul > !FRPLOG!
+                )
+
+                (
+                echo.
+                echo logFile = "./!FRPLOG!"
+                echo logLevel = "info"
+                echo logMaxDays = 3
+                ) >> %STOML%
+                echo "Runing the Service...."
+
+                @REM start /k %WORK_PATH%/build/frps.exe -c frps.toml
+
+                @REM ------------------------------------------------------------------
+                @REM ------------------------------------------------------------------
+
+            ) else (
+                set /p GAME="Which game : 1.MC , 2.Terraria , 3...."
+                if "!GAME!"=="1" (
+                    set /p SERVERAddR="Enter the Server IP : "
+                    echo serverAddr = "!SERVERAddR!" > %CTOML%
+
+                    echo serverPort = 7000 >> %CTOML%
+
+                    set /p PASSWORD="Enter the Server PASSWORD : "
+                    echo token = "!PASSWORD!" >> %CTOML%
+
+                    (
+                    echo. 
+                    echo [[proxies]] 
+                    )>> %CTOML%
+
+                    echo name="MC" >> %CTOML%
+
+                    if "!TYPE!"=="1" (
+                        echo type = "tcp" >> %CTOML%
+                    ) else (
+                        echo type = "xtcp" >> %CTOML%
+                        set /p SK="Write The SK Password : "
+                        echo sk = "!SK!" >> %CTOML%
+                    )
+
+                    if "!CHARACTER!"=="1" (
+                        echo localip = "127.0.0.1" >> %CTOML%
+
+                        echo localport = 25535 >> %CTOML%
+
+                        if "!TYPE!"=="1" (
+                            echo remoteport = 25535 >> %CTOML%
+                        )
+                    ) else (
+                        echo role="vistor" >> %CTOML%
+
+                        echo bindAddr = "127.0.0.1" >> %CTOML%
+
+                        echo bindPort = 25535 >> %CTOML%
+                    )
+                )
+            )
         )
+
 
     ) else if "!mode!"=="2" (
         set /p choice="Enter number : 1 Server or 2 Customer (All other inputs count as cancel) : "
@@ -173,8 +252,9 @@ if exist !FRPS! if exist !FRPC! (
             )
 
             start cmd /k "%WORK_PATH%\build\frps.exe -c %WORK_PATH%\build\frps.toml"
-            start cmd /k "%WORK_PATH%\build\frpc.exe -c %WORK_PATH%\build\frpc.toml"
 
+        ) else if "!choice!"=="2" (
+            start cmd /k "%WORK_PATH%\build\frpc.exe -c %WORK_PATH%\build\frpc.toml"
         )
     ) else (
         echo "Wrong enter.... Cancel And Quit...."

@@ -3,8 +3,9 @@ serverPort = 7000
 token = "@#8SQSA3&ZJJ144" 
  
 [[proxies]] 
-name = "mygame" 
-type = "tcp" 
-localip = "127.0.0.1" 
-localport = 25535
-remoteport = 25535
+name="MC" 
+type = "xtcp" 
+sk = "%^X2Y1LLL091&^*1" 
+role="vistor" 
+bindAddr = "127.0.0.1" 
+bindPort = 25535 
